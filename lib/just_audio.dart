@@ -3151,6 +3151,8 @@ _ProxyHandler _proxyHandlerForSource(StreamAudioSource source) {
 
       await completer.future;
 
+      subscription.cancel();
+
       await request.response.close();
     } catch (e) {
       throw Exception('Stream has already been listened to.');
