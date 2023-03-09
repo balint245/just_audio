@@ -3103,7 +3103,7 @@ _ProxyHandler _proxyHandlerForSource(StreamAudioSource source) {
     try {
       sourceResponse =
           await source.request(rangeRequest?.start, rangeRequest?.endEx);
-      stream = sourceResponse.stream;
+      stream = sourceResponse.stream.asBroadcastStream();
     } catch (e, st) {
       // ignore: avoid_print
       print("Proxy request failed: $e\n$st");
