@@ -3136,21 +3136,25 @@ _ProxyHandler _proxyHandlerForSource(StreamAudioSource source) {
     }
 
     final completer = Completer<void>();
-    final subscription = stream.listen((event) {
-      request.response.add(event);
-    }, onError: (Object e, StackTrace st) {
-      source._player?._playbackEventSubject.addError(e, st);
-    }, onDone: () {
-      completer.complete();
-    });
+    try {
+      final subscription = stream.listen((event) {
+        request.response.add(event);
+      }, onError: (Object e, StackTrace st) {
+        source._player?._playbackEventSubject.addError(e, st);
+      }, onDone: () {
+        completer.complete();
+      });
 
-    request.response.done.then((dynamic value) {
-      subscription.cancel();
-    });
+      request.response.done.then((dynamic value) {
+        subscription.cancel();
+      });
 
-    await completer.future;
+      await completer.future;
 
-    await request.response.close();
+      await request.response.close();
+    } catch (e) {
+      throw Exception('Stream has already been listened to.');
+    }
   }
 
   return handler;
